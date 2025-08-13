@@ -107,6 +107,8 @@ spec:
     - name: build
       image: $(params.BUILDER_IMAGE)
       workingDir: $(workspaces.source.path)
+      securityContext:
+        privileged: true
       env:
         - name: STORAGE_DRIVER
           value: $(params.STORAGE_DRIVER)
