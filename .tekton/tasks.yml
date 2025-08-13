@@ -63,13 +63,8 @@ spec:
       image: python:3.9-slim
       workingDir: $(workspaces.source.path)
       script: |
-        #!/bin/bash
-        set -e
-        python -m pip install --upgrade pip wheel
-        python -m pip install nose
-        if [ -f requirements.txt ]; then
+          #!/bin/bash
+          set -e
+          python -m pip install --upgrade pip wheel
           pip install -r requirements.txt
-        else
-          echo "⚠️ Không tìm thấy requirements.txt, bỏ qua bước cài đặt."
-        fi
-        nosetests $(params.args)
+          nosetests $(params.args)
