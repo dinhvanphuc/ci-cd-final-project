@@ -104,9 +104,19 @@ spec:
   workspaces:
     - name: source
   steps:
+    - name: debug
+      image: $(params.BUILDER_IMAGE)
+      workingDir: $(workspaces.source.path)
+      script: |
+        echo "List files:"
+        ls -l
+        echo "Show Dockerfile:"
+        cat Dockerfile || echo "Dockerfile NOT FOUND"
     - name: build
       image: $(params.BUILDER_IMAGE)
       workingDir: $(workspaces.source.path)
+      securityContext:
+        privileged: true
       env:
         - name: STORAGE_DRIVER
           value: $(params.STORAGE_DRIVER)
@@ -117,7 +127,6 @@ spec:
         buildah bud --storage-driver=$STORAGE_DRIVER -f $(params.DOCKERFILE) -t $(params.IMAGE) $(params.CONTEXT)
         echo "📤 Pushing image to registry: $(params.IMAGE)"
         buildah push --storage-driver=$STORAGE_DRIVER $(params.IMAGE) docker://$(params.IMAGE)
-
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Task
